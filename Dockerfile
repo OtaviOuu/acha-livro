@@ -1,22 +1,37 @@
-FROM ghcr.io/astral-sh/uv:python3.12-bookworm-slim
+FROM debian:bookworm-slim
+
 
 WORKDIR /app
-ENV UV_COMPILE_BYTECODE=1
-ENV UV_LINK_MODE=copy
 
-RUN apt-get update && apt-get install -y libpq-dev gcc && rm -rf /var/lib/apt/lists/*
+ENV PYTHONUNBUFFERED=1
 
-COPY uv.lock pyproject.toml ./
-RUN --mount=type=cache,target=/root/.cache/uv \
-    uv sync --locked --no-dev
+RUN apt-get update && apt-get install -y gcc libpq-dev && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y \
+    chromium \
+    chromium-driver \
+    libnss3 \
+    libatk1.0-0 \
+    libx11-xcb1 \
+    libxcomposite1 \
+    libxdamage1 \
+    libxrandr2 \
+    libasound2 \
+    libpangocairo-1.0-0 \
+    libcups2 \
+    libgtk-3-0 \
+    libgbm1 \
+    libxss1 && \
+    rm -rf /var/lib/apt/lists/*
 
-COPY . /app
+COPY requirements.txt .
 
-RUN --mount=type=cache,target=/root/.cache/uv \
-    uv sync --locked --no-dev
+RUN python3 -m venv /venv
+RUN . /venv/bin/activate
+RUN /venv/bin/pip install --upgrade pip
+RUN /venv/bin/pip install --no-cache-dir -r requirements.txt
 
-ENV PATH="/app/.venv/bin:$PATH"
+COPY . .
 
 EXPOSE 8000
 
-CMD ["/app/.venv/bin/python", "manage.py", "runserver", "0.0.0.0:8000"]
+CMD ["/venv/bin/python", "manage.py", "runserver", "0.0.0.0:8000"]

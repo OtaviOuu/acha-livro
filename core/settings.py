@@ -14,6 +14,7 @@ from pathlib import Path
 import os
 from celery.schedules import crontab
 from datetime import timedelta
+from tracker.tasks import scrape, ping
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -28,7 +29,7 @@ SECRET_KEY = "django-insecure-365ipnb9@@&92lr+j+pl%rib_6(a@gvo+n9a!+-xlftrpi=w+l
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["0.0.0.0"]
 
 
 # Application definition
@@ -40,11 +41,12 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django.contrib.sites",
+    "django_celery_beat",
     "django_celery_results",
     "users",
     "tracker",
 ]
-
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -111,7 +113,7 @@ AUTH_PASSWORD_VALIDATORS = [
 LANGUAGE_CODE = "en-us"
 
 TIME_ZONE = "UTC"
-
+DJANGO_CELERY_BEAT_TZ_AWARE = False
 USE_I18N = True
 
 USE_TZ = True
@@ -135,9 +137,8 @@ LOGIN_URL = "login"
 
 
 # celery
-CELERY_TIMEZONE = "America/Sao_Paulo"
 CELERY_BROKER_URL = "redis://localhost:6379/0"
-CELERY_RESULT_BACKEND = "django-db"
+CELERY_RESULT_BACKEND = "redis://localhost:6379/"
 
 CELERY_ACCEPT_CONTENT = ["json"]
 CELERY_TASK_SERIALIZER = "json"
@@ -145,6 +146,10 @@ CELERY_TASK_SERIALIZER = "json"
 CELERY_BEAT_SCHEDULE = {
     "scrape": {
         "task": "tracker.tasks.scrape",
-        "schedule": 3000.0,  # a cada 10 segundos
+        "schedule": timedelta(seconds=4),  # Run every minute
+    },
+    "ping": {
+        "task": "tracker.tasks.ping",
+        "schedule": timedelta(seconds=10),
     },
 }

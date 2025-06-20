@@ -5,6 +5,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect
 from .models import Termo
 
+from .tasks import ping
+
 
 class RegisterTermView(LoginRequiredMixin, View):
     def get(self, request):
@@ -34,6 +36,7 @@ class RegisterTermView(LoginRequiredMixin, View):
 class DashboardView(LoginRequiredMixin, View):
     def get(self, request):
         termos = Termo.objects.filter(user=request.user)
+        ping.delay()
         return render(request, "tracker/dashboard.html", {"termos": termos})
 
     def delete(self):

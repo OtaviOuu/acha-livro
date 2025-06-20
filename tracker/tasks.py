@@ -9,6 +9,12 @@ main_page_url = "https://www.estantevirtual.com.br/ciencias-exatas?sort=new-rele
 
 @shared_task
 def scrape():
+    print("Starting scrape task...")
+    return "Scrape task completed."
+
+
+@shared_task
+def scrapee():
     session = HTMLSession()
     response = session.get(main_page_url)
     response.html.render(timeout=20, sleep=5)  #
@@ -22,3 +28,9 @@ def scrape():
 
     for boook in books_titles:
         print(boook)
+
+
+@shared_task
+def ping():
+    print("pong")
+    return "pong"
