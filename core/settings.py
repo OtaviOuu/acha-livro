@@ -145,6 +145,6 @@ CELERY_TASK_SERIALIZER = "json"
 CELERY_BEAT_SCHEDULE = {
     "scrape": {
         "task": "tracker.tasks.scrape",
-        "schedule": 1.0,  # a cada 10 segundos
+        "schedule": 3000.0,  # a cada 10 segundos
     },
 }
