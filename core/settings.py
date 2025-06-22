@@ -12,9 +12,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 import os
-from celery.schedules import crontab
 from datetime import timedelta
-from tracker.tasks import scrape, ping
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -42,8 +40,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.sites",
-    "django_celery_beat",
-    "django_celery_results",
+    "huey.contrib.djhuey",
     "users",
     "tracker",
 ]
@@ -135,21 +132,15 @@ AUTH_USER_MODEL = "users.User"
 # auth
 LOGIN_URL = "login"
 
-
-# celery
-CELERY_BROKER_URL = "redis://localhost:6379/0"
-CELERY_RESULT_BACKEND = "redis://localhost:6379/"
-
-CELERY_ACCEPT_CONTENT = ["json"]
-CELERY_TASK_SERIALIZER = "json"
-
-CELERY_BEAT_SCHEDULE = {
-    "scrape": {
-        "task": "tracker.tasks.scrape",
-        "schedule": timedelta(seconds=4),  # Run every minute
+# worker
+HUEY = {
+    "immediate": False,
+    "connection": {
+        "host": "redis",
+        "port": 6379,
+        "db": 0,
     },
-    "ping": {
-        "task": "tracker.tasks.ping",
-        "schedule": timedelta(seconds=10),
+    "consumer": {
+        "worker_type": "process",
     },
 }

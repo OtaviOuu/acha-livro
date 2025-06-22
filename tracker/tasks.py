@@ -1,36 +1,22 @@
-from celery import shared_task
+from huey.contrib.djhuey import periodic_task
+from huey import crontab
+import requests
 from parsel.selector import Selector
-from requests_html import HTMLSession
-
+import requests_html
 
 main_page_url = "https://www.estantevirtual.com.br/ciencias-exatas?sort=new-releases&tipo-de-livro=usado"
 # https://www.estantevirtual.com.br/frdmprcsts/J92-9149-000/lazy
 
 
-@shared_task
-def scrape():
-    print("Starting scrape task...")
-    return "Scrape task completed."
+@periodic_task(crontab(minute="*/1"))
+def every_minute():
+    session = requests_html.HTMLSession()
 
-
-@shared_task
-def scrapee():
-    session = HTMLSession()
     response = session.get(main_page_url)
-    response.html.render(timeout=20, sleep=5)  #
-
-    rendered_html = response.html.html
-    selector = Selector(text=rendered_html)
-
-    books_titles = selector.css(
-        "#product-item .product-item__link.smarthint-tracking-card::attr(title)"
+    response.html.render(sleep=1, timeout=20)
+    selector = Selector(text=response.html.html)
+    titles = selector.css(
+        ".product-item__link.smarthint-tracking-card::attr(title)"
     ).getall()
-
-    for boook in books_titles:
-        print(boook)
-
-
-@shared_task
-def ping():
-    print("pong")
-    return "pong"
+    for title in titles:
+        print(title)
