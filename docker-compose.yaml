@@ -2,14 +2,16 @@ services:
   web:
     build: .
     command: >
-      sh -c "/venv/bin/python manage.py migrate &&
-             /venv/bin/python manage.py runserver 0.0.0.0:8000"
+      sh -c "/venv/bin/python manage.py makemigrations && \
+         /venv/bin/python manage.py migrate && \
+         /venv/bin/python manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/app
     ports:
       - "8000:8000"
     depends_on:
       - redis
+      - db
 
   redis:
     image: redis:7-alpine
@@ -21,3 +23,17 @@ services:
     command: sh -c "/venv/bin/python manage.py run_huey"
     depends_on:
       - redis
+
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: nomedobanco
+      POSTGRES_USER: usuario
+      POSTGRES_PASSWORD: senha
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:

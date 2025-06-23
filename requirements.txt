@@ -35,6 +35,7 @@ pika==0.13.0
 pluggy==1.6.0
 prometheus-client==0.22.1
 prompt-toolkit==3.0.51
+psycopg==3.2.9
 pyamqp==0.1.0.7
 pyee==11.1.1
 pygments==2.19.1

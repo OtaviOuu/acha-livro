@@ -15,6 +15,7 @@ dependencies = [
     "lxml>=5.4.0",
     "lxml-html-clean>=0.4.2",
     "parsel>=1.10.0",
+    "psycopg>=3.2.9",
     "pyamqp>=0.1.0.7",
     "redis>=6.2.0",
     "requests>=2.32.4",
