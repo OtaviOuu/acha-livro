@@ -2,6 +2,8 @@ from django.shortcuts import render
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Termo
+from users.models import User
+from django.shortcuts import redirect
 
 
 class RegisterTermView(LoginRequiredMixin, View):
@@ -32,7 +34,19 @@ class RegisterTermView(LoginRequiredMixin, View):
 class DashboardView(LoginRequiredMixin, View):
     def get(self, request):
         termos = Termo.objects.filter(user=request.user)
-        return render(request, "tracker/dashboard.html", {"termos": termos})
+        livros = request.user.livros
+        return render(
+            request,
+            "tracker/dashboard.html",
+            {
+                "termos": termos,
+                "livros": livros,
+            },
+        )
 
-    def delete(self):
-        pass
+    def post(self, request, livro_name):
+        request.user.livros = [
+            livro for livro in request.user.livros if livro["name"] != livro_name
+        ]
+        request.user.save()
+        return redirect("dashboard")

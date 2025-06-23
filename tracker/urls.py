@@ -1,6 +1,4 @@
-from django.contrib import admin
-from django.urls import path, include
-from django.shortcuts import redirect
+from django.urls import path
 
 from . import views
 
@@ -8,4 +6,9 @@ urlpatterns = [
     path("", views.RegisterTermView.as_view(), name="index"),
     path("register/", views.RegisterTermView.as_view(), name="register_term"),
     path("dashboard/", views.DashboardView.as_view(), name="dashboard"),
+    path(
+        "delete_livro/<str:livro_name>",
+        views.DashboardView.as_view(),
+        name="delete_livro",
+    ),
 ]

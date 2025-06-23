@@ -6,7 +6,31 @@
 {% if termos %}
 
 
+
 <div class="content">
+    <h1>Livros encontrados</h1>
+    <div class="row">
+        {% for livro in livros %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <img src="{{ livro.image_url }}" class="card-img-top livro-imagem" alt="Capa do livro {{ livro.name }}">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">{{ livro.name }}</h5>
+                    <a href="{{ livro.url }}" target="_blank" class="btn btn-primary mt-auto">Ver no site</a>
+                </div>
+                <form action="{% url 'delete_livro' livro.name %}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" onclick="return confirm('Tem certeza que quer deletar?');">
+                        Deletar
+                    </button>
+                </form>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+    </div>
     <ul>
         {% for termo in termos %}
         <li>
