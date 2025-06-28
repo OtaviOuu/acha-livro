@@ -37,7 +37,13 @@
     </div>
     <div class="tags">
       {% for termo in termos %}
-      <span class="tag is-link">{{ termo.name }}</span>
+      <form action="{% url 'delete_term' termo.id %}" method="post" class="is-inline-block">
+        {% csrf_token %}
+        <span class="tag is-link is-deleteable">
+          {{ termo.name }}
+          <button class="delete is-small" type="submit" title="Deletar termo"></button>
+        </span>
+      </form>
       {% endfor %}
     </div>
   </div>

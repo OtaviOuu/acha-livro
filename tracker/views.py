@@ -50,3 +50,8 @@ class DashboardView(LoginRequiredMixin, View):
         ]
         request.user.save()
         return redirect("dashboard")
+
+class DeleteTermView(LoginRequiredMixin, View):
+    def post(self, request, term_id):
+        Termo.objects.filter(id=term_id, user=request.user).delete()
+        return redirect("dashboard")

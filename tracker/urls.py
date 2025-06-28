@@ -11,4 +11,9 @@ urlpatterns = [
         views.DashboardView.as_view(),
         name="delete_livro",
     ),
+    path(
+        "delete_term/<int:term_id>/",
+        views.DeleteTermView.as_view(),
+        name="delete_term",
+    ),
 ]
