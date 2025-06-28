@@ -3,22 +3,25 @@
 {% block title %}Tracker{% endblock %}
 
 {% block content %}
-{% if message %}
-<div class="notification is-info">
-    {{ message }}
-</div>
-{% endif %}
-<div class="field">
-
-    <form action="{% url 'register_term' %}" method="post">
+<div class="columns is-centered">
+  <div class="column is-half">
+    <div class="box">
+      <h1 class="title has-text-centered">Adicionar Termo</h1>
+      <form action="{% url 'register_term' %}" method="post">
         {% csrf_token %}
-
-        <label class="label">Label</label>
-        <div class="control">
-            <input class="input" type="text" placeholder="Termo para monitorar..." name="term" required>
-            <input class="button is-primary" type="submit" value="Adicionar termo">
+        {% if message %}
+        <div class="notification is-info">{{ message }}</div>
+        {% endif %}
+        <div class="field has-addons">
+          <div class="control is-expanded">
+            <input class="input" type="text" name="term" placeholder="Termo para monitorar..." required>
+          </div>
+          <div class="control">
+            <button class="button is-primary">Adicionar</button>
+          </div>
         </div>
-    </form>
+      </form>
+    </div>
+  </div>
 </div>
-
 {% endblock %}
