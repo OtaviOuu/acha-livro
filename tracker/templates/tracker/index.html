@@ -3,10 +3,24 @@
 {% block title %}Tracker{% endblock %}
 
 {% block content %}
-<div class="columns is-centered">
+<div class="columns">
   <div class="column is-half">
     <div class="box">
-      <h1 class="title has-text-centered">Adicionar Termo</h1>
+      <h2 class="title is-4 has-text-centered">Como Funciona</h2>
+      <div class="content">
+        <p>O AchaLivro monitora automaticamente novos livros no site <strong>Estante Virtual</strong> que correspondem aos termos cadastrados.</p>
+        <ul>
+          <li>Cadastre termos de busca personalizados.</li>
+          <li>A cada minuto, um processo de <em>scraping</em> verifica novos lançamentos.</li>
+          <li>Livros encontrados são adicionados ao seu dashboard.</li>
+          <li>Gerencie seus termos e livros diretamente pelo painel.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="column is-half">
+    <div class="box">
+      <h2 class="title is-4 has-text-centered">Adicionar Termo</h2>
       <form action="{% url 'register_term' %}" method="post">
         {% csrf_token %}
         {% if message %}
