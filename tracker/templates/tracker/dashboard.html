@@ -3,49 +3,56 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block content %}
-  {% if termos %}
-  <div class="content">
-    <h1 class="title">Livros Encontrados</h1>
-    <div class="columns is-multiline">
-      {% for livro in livros %}
-      <div class="column is-one-third">
-        <div class="card">
-          {% if livro.image_url %}
-          <div class="card-image">
-            <figure class="image is-4by3">
-              <img src="{{ livro.image_url }}" alt="Capa do livro {{ livro.name }}">
-            </figure>
-          </div>
-          {% endif %}
-          <div class="card-content">
-            <p class="title is-5">{{ livro.name }}</p>
-            <div class="buttons mt-3">
-              {% if livro.url|slice:"0:4" == "http" %}
-              <a href="{{ livro.url }}" target="_blank" class="button is-primary is-fullwidth">Ver no Estante Virtual</a>
-              {% else %}
-              <a href="https://www.estantevirtual.com.br{{ livro.url }}" target="_blank" class="button is-primary is-fullwidth">Ver no Estante Virtual</a>
-              {% endif %}
-              <form action="{% url 'delete_livro' livro.name %}" method="post">
-                {% csrf_token %}
-                <button class="button is-danger is-light is-fullwidth mt-2" type="submit" onclick="return confirm('Tem certeza que quer deletar?');">Deletar</button>
-              </form>
-            </div>
+{% if termos %}
+<div class="content">
+  <h1 class="title">Livros Encontrados</h1>
+  <div class="columns is-multiline">
+    {% for livro in livros %}
+    <div class="column is-one-third">
+      <div class="card">
+        {% if livro.image_url %}
+        <div class="card-image">
+          <figure class="image is-4by3">
+            <img src="{{ livro.image_url }}" alt="Capa do livro {{ livro.name }}">
+          </figure>
+        </div>
+        {% endif %}
+        <div class="card-content">
+          <p class="title is-5">{{ livro.name }}</p>
+          <div class="buttons mt-3">
+            {% if livro.url|slice:"0:4" == "http" %}
+            <a href="{{ livro.url }}" target="_blank" class="button is-primary is-fullwidth">Ver no Estante Virtual</a>
+            {% else %}
+            <a href="https://www.estantevirtual.com.br{{ livro.url }}" target="_blank"
+              class="button is-primary is-fullwidth">Ver no Estante Virtual</a>
+            {% endif %}
+            <form action="{% url 'delete_livro' livro.name %}" method="post">
+              {% csrf_token %}
+              <button class="button is-danger is-light is-fullwidth mt-2" type="submit"
+                onclick="return confirm('Tem certeza que quer deletar?');">Deletar</button>
+            </form>
           </div>
         </div>
       </div>
-      {% endfor %}
     </div>
-    <div class="tags">
-      {% for termo in termos %}
-      <form action="{% url 'delete_term' termo.id %}" method="post" class="is-inline-block">
-        {% csrf_token %}
-        <span class="tag is-link is-deleteable">
-          {{ termo.name }}
-          <button class="delete is-small" type="submit" title="Deletar termo"></button>
-        </span>
-      </form>
-      {% endfor %}
-    </div>
+    {% endfor %}
   </div>
-  {% endif %}
+  <div class="tags">
+    {% for termo in termos %}
+    <form action="{% url 'delete_term' termo.id %}" method="post" class="is-inline-block">
+      {% csrf_token %}
+      <span class="tag is-link is-deleteable">
+        {{ termo.name }}
+        <button class="delete is-small" type="submit" title="Deletar termo"></button>
+      </span>
+    </form>
+    {% endfor %}
+  </div>
+</div>
+{% else %}
+<div class="content">
+  <h1 class="title">Nenhum termo pesquisado</h1>
+  <p>Você ainda não pesquisou nenhum termo. Comece a buscar livros!</p>
+</div>
+{% endif %}
 {% endblock %}

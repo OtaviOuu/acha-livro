@@ -55,3 +55,11 @@ class DeleteTermView(LoginRequiredMixin, View):
     def post(self, request, term_id):
         Termo.objects.filter(id=term_id, user=request.user).delete()
         return redirect("dashboard")
+
+
+class HomeView(View):
+    """
+    Landing page de boas-vindas ao site.
+    """
+    def get(self, request):
+        return render(request, "tracker/home.html")
