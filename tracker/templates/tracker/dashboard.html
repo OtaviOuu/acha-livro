@@ -16,7 +16,11 @@
                 <img src="{{ livro.image_url }}" class="card-img-top livro-imagem" alt="Capa do livro {{ livro.name }}">
                 <div class="card-body d-flex flex-column">
                     <h5 class="card-title">{{ livro.name }}</h5>
-                    <a href="{{ livro.url }}" target="_blank" class="btn btn-primary mt-auto">Ver no site</a>
+                    {% if livro.url|slice:"0:4" == "http" %}
+                    <a href="{{ livro.url }}" target="_blank" class="button is-primary mt-2">Ver no Estante Virtual</a>
+                    {% else %}
+                    <a href="https://www.estantevirtual.com.br{{ livro.url }}" target="_blank" class="button is-primary mt-2">Ver no Estante Virtual</a>
+                    {% endif %}
                 </div>
                 <form action="{% url 'delete_livro' livro.name %}" method="post" style="display:inline;">
                     {% csrf_token %}

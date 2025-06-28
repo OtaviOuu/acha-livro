@@ -5,6 +5,7 @@ import requests_html
 
 # quero importar modelo de busca
 from .models import Termo
+from urllib.parse import urljoin
 
 main_page_url = "https://www.estantevirtual.com.br/ciencias-exatas?sort=new-releases&tipo-de-livro=usado"
 # https://www.estantevirtual.com.br/frdmprcsts/J92-9149-000/lazy
@@ -27,7 +28,8 @@ def every_minute():
         if book_title:
             for termo in all_terms:
                 if termo.name.lower() in book_title.lower():
-                    book_url = book.css("a::attr(href)").get()
+                    book_href = book.css("a::attr(href)").get()
+                    book_url = urljoin("https://www.estantevirtual.com.br", book_href) if book_href else None
                     book_image_url = book.css("img::attr(src)").get()
 
                     new_book_found = {
