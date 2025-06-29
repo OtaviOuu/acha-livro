@@ -20,4 +20,5 @@ dependencies = [
     "redis>=6.2.0",
     "requests>=2.32.4",
     "requests-html>=0.10.0",
+    "seleniumbase>=4.39.5",
 ]
